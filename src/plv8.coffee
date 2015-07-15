@@ -21,7 +21,7 @@ execute = ->
   client.querySync.apply(client, arguments).map (x) ->
     obj = {}
     for k of x
-      if typeof x[k] == 'object'
+      if x[k] && typeof x[k] == 'object'
         obj[k] = JSON.stringify(x[k])
       else
         obj[k] = x[k]
@@ -44,3 +44,5 @@ module.exports =
       args_exp.push("$#{i+1}")
     args_exp = args_exp.join(',')
     orders = execute("select #{fn}(#{args_exp}) as res", sql_args)[0]['res']
+  require: (nm)->
+    require('./loader').scan(nm)

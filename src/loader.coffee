@@ -36,7 +36,6 @@ scan = (pth) ->
 
   delete require.cache
 
-  #TODO: calculate path from calling module
   file = require(pth)
 
   modules_js = generate_modules(modules_idx)
@@ -46,6 +45,7 @@ scan = (pth) ->
     console.log('-- Load ', v.fn.plv8)
     #console.log(sql)
     plv8.execute(sql)
+  file
 
 generate_modules = (modules_idx)->
   mods = []
