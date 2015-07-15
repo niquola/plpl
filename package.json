@@ -1,35 +1,36 @@
 {
   "name": "plpl",
   "description": "node + plv8 + pg",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "dependencies": {
     "cli": "latest",
-    "cli-table": "latest"
+    "cli-table": "latest",
+    "coffee": "latest",
+    "pg-native": "latest"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/niquola/plpl"
   },
   "devDependencies": {
-    "coffee": "latest",
-    "coffee-script": "^1.9.3",
-    "jasmine-node": "latest",
-    "pg-native": "latest"
+    "jasmine-node": "latest"
   },
   "author": "niquola",
   "engines": {
     "node": ">=0.10"
   },
   "homepage": "https://github.com/niquola/plpl",
+  "bin": "bin/plpl",
+  "preferGlobal": true,
   "files": [
     "bin",
     "lib",
     "src"
   ],
   "scripts": {
-    "publish": "coffee -o lib/ -c src/ && npm publish",
+    "publish": "coffee -o lib/ -c src/",
     "watch": "coffee -w --output lib --compile src",
-    "build": "`npm bin`/coffee --output lib --compile src && ls lib -R",
+    "build": "coffee --output lib --compile src && ls lib -R",
     "test": "",
     "test-watch": ""
   }

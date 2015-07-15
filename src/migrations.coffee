@@ -1,5 +1,6 @@
 plv8 = require('./plv8')
 fs = require('fs')
+path = require('path')
 
 MIGRATION_REG = /^\d.*__.*/
 parse_name = (x)->
@@ -7,7 +8,7 @@ parse_name = (x)->
   {ts: parts[0].replace(/_/g,' '), name: parts[1].split('.')[0]}
 
 ensure_migrations_table = ()->
-  unless plv8.execute("select to_regclass('public._migrations')")[0]
+  unless plv8.execute("select to_regclass('public._migrations')")[0]['to_regclass']
     plv8.execute """
     create table if not exists _migrations (
       name text PRIMARY KEY,
@@ -61,8 +62,8 @@ pending = (dir)->
 ensure_migrations_dir = (dir)->
   dir = dir || process.env.MIGRATIONS_DIR
   unless dir
-    throw new Error("Please export MIGRATIONS_DIR=???")
-  dir
+    dir = path.join(process.cwd(), "migrations")
+  path.resolve(dir)
 
 up = (dir)->
   dir = ensure_migrations_dir(dir)

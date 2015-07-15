@@ -10,16 +10,25 @@ unless conn_string
 
 client = new Client
 client.connectSync(conn_string)
+
+coerse = (x)->
+  if Array.isArray(x) or typeof x == 'object'
+    JSON.stringify(x)
+  else
+    x
+
+execute = ->
+  client.querySync.apply(client, arguments).map (x) ->
+    obj = {}
+    for k of x
+      if typeof x[k] == 'object'
+        obj[k] = JSON.stringify(x[k])
+      else
+        obj[k] = x[k]
+    obj
+
 module.exports =
-  execute: ->
-    client.querySync.apply(client, arguments).map (x) ->
-      obj = {}
-      for k of x
-        if typeof x[k] == 'object'
-          obj[k] = JSON.stringify(x[k])
-        else
-          obj[k] = x[k]
-      obj
+  execute: execute
   elog: (x, msg) ->
     console.log "#{x}:", msg
     return
@@ -27,3 +36,11 @@ module.exports =
   quote_literal: (str)-> str && client.pq.escapeLiteral(str)
   nullable: (str)->
   quote_ident: (str)-> str && client.pq.escapeIdentifier(str)
+  call: (fn, args...)->
+    sql_args = []
+    args_exp = []
+    for a,i in args
+      sql_args.push(coerse(a))
+      args_exp.push("$#{i+1}")
+    args_exp = args_exp.join(',')
+    orders = execute("select #{fn}(#{args_exp}) as res", sql_args)[0]['res']
