@@ -12,19 +12,25 @@
   },
   "devDependencies": {
     "coffee": "latest",
+    "coffee-script": "^1.9.3",
     "jasmine-node": "latest",
-    "pg-native":"latest"
+    "pg-native": "latest"
   },
   "author": "niquola",
-  "engines": { "node": ">=0.10" },
+  "engines": {
+    "node": ">=0.10"
+  },
   "homepage": "https://github.com/niquola/plpl",
-  "files": ["bin", "lib", "src"],
+  "files": [
+    "bin",
+    "lib",
+    "src"
+  ],
   "scripts": {
     "publish": "coffee -o lib/ -c src/ && npm publish",
-    "watch": "webpack --progress --colors --watch",
+    "watch": "coffee -w --output lib --compile src",
     "build": "`npm bin`/coffee --output lib --compile src && ls lib -R",
-    "test":  "",
-    "test-watch":  "",
-    "watch": "coffee -w --output lib --compile src"
+    "test": "",
+    "test-watch": ""
   }
 }
