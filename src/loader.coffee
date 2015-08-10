@@ -1,4 +1,4 @@
-require('coffee-script/register')
+#require('coffee-script/register')
 path = require('path')
 plv8 = require('./plv8')
 Module = require("module")
