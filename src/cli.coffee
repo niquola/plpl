@@ -1,16 +1,31 @@
 mig   = require './migrations'
-load  = require './loader'
+load  = require './other_loader'
+plv8 = require('./plv8')
 
-migrate = (args)->
-  mig.up()
+migrate = (args)-> mig.up()
+unmigrate = (args)-> mig.down()
 
-generate_migration = (args)->
-  mig.generate(args[0])
+generate_migration = (args)-> mig.generate(args[0])
 
+fs = require('fs')
+config = JSON.parse(fs.readFileSync(process.cwd() + '/plpl.json', 'utf8'))
+process.env.DATABASE_URL ||= config.database_url
+# console.log("CONFIG",config)
 
 reload = (args)->
+  console.log("Reloading #{config.entry}")
+  plv8.execute load.scan(process.cwd() + '/' + config.entry)
+
+compile = (args)->
+  console.log("-- Compile #{config.entry}")
+  console.log load.scan(process.cwd() + '/' + config.entry)
 
 commands =
+ compile:
+   default:
+     fn: compile
+     args: ''
+     desc: 'return sql string'
  reload:
    default:
      fn: reload
@@ -25,6 +40,10 @@ commands =
      fn: migrate
      args: ''
      desc: 'migrate up'
+   down:
+     fn: unmigrate
+     args: ''
+     desc: 'migrate down'
    new:
      fn: generate_migration
      args: '<migration_name>'
@@ -43,7 +62,7 @@ exports.run = ()->
   if not cmd_nm
     print_usage(commands)
 
-  subcmd_nm = process.argv[3] || 'default'
+  subcmd_nm = process.argv[3]
   args = process.argv[4..-1]
 
   cmd = commands[cmd_nm]
@@ -51,7 +70,13 @@ exports.run = ()->
     console.log("Unknown command #{cmd_nm}")
     return
   subcmd = cmd[subcmd_nm]
+
+  unless subcmd
+    subcmd = cmd['default']
+    args = [subcmd_nm].concat(args)
+
   unless subcmd
     console.log("Unknown sub-command #{subcmd_nm}")
     return
+
   subcmd.fn(args)

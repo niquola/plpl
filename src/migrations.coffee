@@ -76,6 +76,17 @@ up = (dir)->
   else
     console.log "All migrations done!"
 
+down = (dir)->
+  dir = ensure_migrations_dir(dir)
+  ensure_migrations_table()
+  pnd = pending(dir)
+  for m in pending(dir)
+    migrate_down(m)
+  if pnd.length == 0
+    console.log "No pending migrations"
+  else
+    console.log "All migrations done!"
+
 spit = (pth, cnt)->
   fd = fs.openSync(pth, 'a')
   fs.writeSync(fd, cnt)
@@ -97,4 +108,5 @@ exports.down = (plv8)->
   """
 
 module.exports.up = up
+module.exports.down = down
 module.exports.generate = generate

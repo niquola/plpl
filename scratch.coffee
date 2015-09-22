@@ -1,13 +1,10 @@
 plv8 = require('./src/plv8')
-loader = require('./src/loader')
+loader = require('./src/other_loader')
 
 console.log plv8.execute 'select 1'
 
-loader.scan('./scratch_code.coffee')
+init_sql = loader.scan('../src/fhir/crud.coffee')
 
-mod = require('./scratch_code.coffee')
-
-mod.generate_table(plv8, 'users')
-
-console.log plv8.execute 'select plv8_add(1, 3)'
-console.log plv8.execute 'select generate_table($1)', ['musers']
+console.log(init_sql)
+plv8.execute "CREATE SCHEMA IF NOT EXISTS fhir"
+plv8.execute init_sql
