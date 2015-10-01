@@ -1,5 +1,5 @@
 mig   = require './migrations'
-load  = require './other_loader'
+load  = require './loader'
 plv8 = require('./plv8')
 
 migrate = (args)-> mig.up()
