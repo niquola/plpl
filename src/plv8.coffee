@@ -46,3 +46,4 @@ module.exports =
     orders = execute("select #{fn}(#{args_exp}) as res", sql_args)[0]['res']
   require: (nm)->
     require('./loader').scan(nm)
+  cache: {}

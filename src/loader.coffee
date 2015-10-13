@@ -72,12 +72,13 @@ generate_fn = (mod, name, info)->
 
   """
   ---
+  DROP FUNCTION IF EXISTS #{declaration};
   CREATE OR REPLACE FUNCTION
   #{declaration}
-  RETURNS #{info.returns} AS $$
+  RETURNS #{info.returns} AS $JAVASCRIPT$
     var mod = require("#{mod.filename}")
     return mod.#{name}(plv8, #{pass_params})
-  $$ LANGUAGE plv8;
+  $JAVASCRIPT$ LANGUAGE plv8;
   ---
   """
 
@@ -106,7 +107,7 @@ scan = (pth) ->
       fns.push(generate_fn(info, k,v))
 
   """
-  CREATE OR REPLACE FUNCTION plv8_init() RETURNS text AS $$
+  CREATE OR REPLACE FUNCTION plv8_init() RETURNS text AS $JAVASCRIPT$
     var _modules = {};
     var _current_stack = [];
 
@@ -139,8 +140,10 @@ scan = (pth) ->
     this.console = {
       log: function(x){ plv8.elog(NOTICE, x); }
     };
+
+    this.cache = {}
     return 'done'
-  $$ LANGUAGE plv8 IMMUTABLE STRICT;
+  $JAVASCRIPT$ LANGUAGE plv8 IMMUTABLE STRICT;
 
   #{fns.join("\n")}
   """
