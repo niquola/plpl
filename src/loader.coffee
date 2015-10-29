@@ -84,7 +84,7 @@ generate_fn = (mod, name, info)->
 
   """
   ---
-  DROP FUNCTION IF EXISTS #{declaration};
+  DROP FUNCTION IF EXISTS #{declaration} CASCADE;
   CREATE OR REPLACE FUNCTION
   #{declaration}
   RETURNS #{info.returns} AS $JAVASCRIPT$
