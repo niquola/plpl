@@ -4,12 +4,14 @@ global.ERROR="ERROR"
 global.DEBUG="DEBUG"
 
 conn_string = process.env.DATABASE_URL
+schema = process.env.FB_SCHEMA || 'public'
 
 unless conn_string
   throw new Error("set connection string \n export DATABASE_URL=postgres://user:password@localhost:5432/test")
 
 client = new Client
 client.connectSync(conn_string)
+
 
 coerse = (x)->
   if Array.isArray(x) or typeof x == 'object'
@@ -26,6 +28,8 @@ execute = ->
       else
         obj[k] = x[k]
     obj
+
+execute "SET search_path = '#{schema}'"
 
 module.exports =
   execute: execute
