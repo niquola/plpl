@@ -38,7 +38,7 @@ zip = (a,b)->
 
 Module::_compile = (answer, filename) ->
   dir = path.dirname(filename)
-  basename = path.basename(filename, '.coffee')
+  basename = path.basename(path.basename(filename, '.coffee'),'.litcoffee')
   module =
     key: "#{dir}/#{basename}"
     filename: filename
@@ -124,7 +124,7 @@ scan = (pth) ->
     // modules stop
 
     this.require = function(dep){
-      var abs_path = dep.replace(/\\.coffee$/, '');
+      var abs_path = dep.replace(/\\.(coffee|litcoffee)$/, '');
       var current = _current_stack[_current_stack.length - 1];
       if(dep.match(/^\\.\\.\\//)){
         var dir = current.dir.split('/');
@@ -137,7 +137,12 @@ scan = (pth) ->
       // todo resolve paths
       var mod = _modules[abs_path]
       if(!mod){ throw new Error("No module " + abs_path + " while loading " + JSON.stringify(_current_stack)); }
-      if(!mod.cached){ mod.cached = mod.init() }
+      if(!mod.cached){
+        if(mod.inprogress){ throw new Error("Cyclic dependecy " + abs_path) }
+        mod.inprogress = true
+        mod.cached = mod.init()
+        mod.inprogress = false
+      }
       return mod.cached
     }
     this.modules = function(){
@@ -149,7 +154,7 @@ scan = (pth) ->
       log: function(x){ plv8.elog(NOTICE, x); }
     };
 
-    this.cache = {}
+    plv8.cache = {}
     return 'done'
   $JAVASCRIPT$ LANGUAGE plv8 IMMUTABLE STRICT;
 
