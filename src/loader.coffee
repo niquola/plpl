@@ -49,7 +49,6 @@ Module::_compile = (answer, filename) ->
   module.code = module_code(module, answer)
   plv8_exports[currentModule] = module
   res = oldcompile.apply(this, arguments)
-  module.schema = @exports.plv8_schema
   for k,v of @exports when v.plv8_signature?
       sig = v.plv8_signature
       params = parse_params(v.toString())[1..-1]
@@ -79,7 +78,7 @@ generate_fn = (mod, name, info)->
   # todo validate params & signature
   params = (x.join(" ") for x in info.params).join(', ')
   pass_params = (x for [x,_] in info.params).join(', ')
-  declaration = "#{mod.schema}.#{name}(#{params})"
+  declaration = "#{name}(#{params})"
   immutable = (info.immutable && 'IMMUTABLE') || ''
 
   """
@@ -110,9 +109,6 @@ scan = (pth) ->
   fns = []
   for fl, info of plv8_exports
     console.log("Compile module #{fl}...")
-    if info.schema
-      console.log("in schema", info.schema)
-      fns.push("CREATE SCHEMA IF NOT EXISTS #{info.schema};")
     deps.push(info.code)
     for k,v of info.exports
       console.log(" * fn #{k}...")
