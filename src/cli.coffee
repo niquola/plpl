@@ -1,6 +1,7 @@
 mig   = require './migrations'
 load  = require './loader'
 plv8 = require('./plv8')
+fs = require('fs')
 
 migrate = (args)-> mig.up()
 unmigrate = (args)-> mig.down()
@@ -17,8 +18,13 @@ reload = (args)->
   plv8.execute load.scan(process.cwd() + '/' + config.entry)
 
 compile = (args)->
+  file = args[0]
   console.log("-- Compile #{config.entry}")
-  console.log load.scan(process.cwd() + '/' + config.entry)
+  sql =  load.scan(process.cwd() + '/' + config.entry)
+  if file
+    fs.writeFileSync(file, sql)
+  else
+    console.log(sql)
 
 commands =
  compile:
