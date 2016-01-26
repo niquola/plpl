@@ -1,0 +1,4 @@
+2016-01-26  Danil Kutkevich  <danil@kutkevich.org>
+
+        * src/loader.coffee (generate_fn): respects functions with only
+        one argument (#1).

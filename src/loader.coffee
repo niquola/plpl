@@ -77,9 +77,12 @@ _isAbsolute = (pth)->
 generate_fn = (mod, name, info)->
   # todo validate params & signature
   params = (x.join(" ") for x in info.params).join(', ')
-  pass_params = (x for [x,_] in info.params).join(', ')
   declaration = "#{name}(#{params})"
   immutable = (info.immutable && 'IMMUTABLE') || ''
+  if info.params.length > 0
+    pass_params = ', ' + (x for [x,_] in info.params).join(', ')
+  else
+    pass_params = ''
 
   """
   ---
@@ -88,7 +91,7 @@ generate_fn = (mod, name, info)->
   #{declaration}
   RETURNS #{info.returns} AS $JAVASCRIPT$
     var mod = require("#{mod.filename}")
-    return mod.#{name}(plv8, #{pass_params})
+    return mod.#{name}(plv8#{pass_params})
   $JAVASCRIPT$ LANGUAGE plv8 #{immutable};
   ---
   """
