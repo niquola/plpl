@@ -129,12 +129,16 @@ scan = (pth) ->
     this.require = function(dep){
       var abs_path = dep.replace(/\\.(coffee|litcoffee)$/, '');
       var current = _current_stack[_current_stack.length - 1];
-      if(dep.match(/^\\.\\.\\//)){
+      if(dep.match(/^\\.\\.\\/\\.\\.\\//)){
+        var dir = current.dir.split('/');
+        dir.pop();
+        dir.pop();
+        abs_path = dir.join('/') + '/' + dep.replace('../../','');
+      } else if(dep.match(/^\\.\\.\\//)) {
         var dir = current.dir.split('/');
         dir.pop();
         abs_path = dir.join('/') + '/' + dep.replace('../','');
-      }
-      else if(dep.match(/^\\.\\//)){
+      } else if(dep.match(/^\\.\\//)) {
         abs_path = current.dir + '/' + dep.replace('./','');
       }
       // todo resolve paths

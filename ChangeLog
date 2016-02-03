@@ -1,4 +1,9 @@
+2016-02-03  Danil Kutkevich  <danil@kutkevich.org>
+
+        * src/loader.coffee (scan): Feat: `Require` respects modules wich
+        contain `../../` in path (#2).
+
 2016-01-26  Danil Kutkevich  <danil@kutkevich.org>
 
-        * src/loader.coffee (generate_fn): respects functions with only
+        * src/loader.coffee (generate_fn): Respects functions with only
         one argument (#1).
