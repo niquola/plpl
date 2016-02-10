@@ -19,8 +19,8 @@ module_code = (mod, code)->
   _modules["#{mod.key}"] = {
     init:  function(){
       var exports = {};
-      _current_stack.push({file: "#{mod.basename}", dir: "#{mod.dir}"})
-      var module = {exports: exports};
+      _current_stack.push({ file: "#{mod.basename}", dir: "#{mod.dir}"})
+      var module = { exports: exports};
       #{code}
       _current_stack.pop()
       return module.exports;
