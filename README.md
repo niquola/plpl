@@ -1,4 +1,4 @@
-sample
+## PLPL
 
 ```sh
  nvm install 0.12
@@ -6,4 +6,3 @@ sample
  npm install
  source config.sh && npm start
 ```
-## PLPL
