@@ -1,5 +1,4 @@
 path = require('path')
-plv8 = require('./plv8')
 Module = require("module")
 
 currentModule = null

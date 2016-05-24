@@ -1,12 +1,17 @@
-mig   = require './migrations'
 load  = require './loader'
-plv8 = require('./plv8')
 fs = require('fs')
 
-migrate = (args)-> mig.up()
-unmigrate = (args)-> mig.down()
+migrate = (args)->
+  mig   = require './migrations'
+  mig.up()
 
-generate_migration = (args)-> mig.generate(args[0])
+unmigrate = (args)->
+  mig   = require './migrations'
+  mig.down()
+
+generate_migration = (args)->
+  mig   = require './migrations'
+  mig.generate(args[0])
 
 fs = require('fs')
 config = JSON.parse(fs.readFileSync(process.cwd() + '/plpl.json', 'utf8'))
@@ -15,6 +20,7 @@ process.env.DATABASE_URL ||= config.database_url
 
 reload = (args)->
   console.log("Reloading #{config.entry}")
+  plv8 = require('./plv8')
   plv8.execute load.scan(process.cwd() + '/' + config.entry)
 
 compile = (args)->
