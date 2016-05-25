@@ -51,3 +51,18 @@ module.exports =
   require: (nm)->
     require('./loader').scan(nm)
   cache: {}
+  subtransaction: (func)->
+    # <http://pgxn.org/dist/plv8/doc/plv8.html#Subtransaction>
+    execute('BEGIN;')
+
+    try
+      result = func.apply(this)
+    catch e
+      shouldRollback = true
+
+    if shouldRollback
+      execute('ROLLBACK;')
+    else
+      execute('COMMIT;')
+
+    result
