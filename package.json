@@ -1,7 +1,7 @@
 {
   "name": "plpl",
   "description": "node + plv8 + pg",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "cli": "latest",
     "cli-table": "latest",

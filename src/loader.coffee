@@ -110,10 +110,10 @@ scan = (pth) ->
   deps = []
   fns = []
   for fl, info of plv8_exports
-    console.log("Compile module #{fl}...")
+    console.log("-- Compile module #{fl}...")
     deps.push(info.code)
     for k,v of info.exports
-      console.log(" * fn #{k}...")
+      console.log("-- * fn #{k}...")
       fns.push(generate_fn(info, k,v))
 
   """

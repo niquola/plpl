@@ -22,6 +22,7 @@ reload = (args)->
   console.log("Reloading #{config.entry}")
   plv8 = require('./plv8')
   plv8.execute load.scan(process.cwd() + '/' + config.entry)
+  console.log("Done")
 
 compile = (args)->
   file = args[0]
