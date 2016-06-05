@@ -1,8 +1,10 @@
 ## PLPL
 
+Build nodejs like js and load into PostgreSQL PLV8.
+
 ```sh
- nvm install 0.12
- nvm use 0.12
- npm install
- source config.sh && npm start
+ npm install plpl
+ `npm bin`/plpl
 ```
+
+See example application - https://github.com/niquola/holyjs-live
